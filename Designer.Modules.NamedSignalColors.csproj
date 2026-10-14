@@ -9,6 +9,7 @@
     <Reference Include="ModuleCommon"><HintPath>$(DesignerDir)/ModuleCommon.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="0Harmony"><HintPath>$(DesignerDir)/0Harmony.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="ActiproSoftware.Shared.Wpf"><HintPath>$(DesignerDir)/ActiproSoftware.Shared.Wpf.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="ActiproSoftware.Editors.Wpf"><HintPath>$(DesignerDir)/ActiproSoftware.Editors.Wpf.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="ActiproSoftware.DataGrid.Contrib.Wpf"><HintPath>$(DesignerDir)/ActiproSoftware.DataGrid.Contrib.Wpf.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 </Project>
