@@ -18,7 +18,7 @@ public sealed class SignalModule : ModModule
         Commands.Register(new("named-signal-colors/window", "Named Signal Colors…", "Named Signal Colors", () =>
         {
             if (window is not null) { window.Activate(); return; }
-            window = new SignalColorWindow(Application.Current.MainWindow, (kind, detail) => Host.Receipt("named-signal-colors", kind, detail));
+            window = new SignalColorWindow(Application.Current.MainWindow, (kind, detail) => Host.RequiredReceipt("named-signal-colors", kind, detail));
             window.Closed += (_, _) => window = null; window.Show();
         }, () => true, InMenu: true));
     }
