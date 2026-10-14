@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "id": "named-signal-colors",
+  "name": "Named Signal Colors",
+  "description": "Preview and apply role-based colors to Named Signals, with a saved palette and an optional default-color filter.",
+  "author": "joshua-small",
+  "helpUrl": "https://github.com/joshua-small/qsys-named-signal-colors",
+  "thumbnail": "catalog/artwork/avitex.ico"
+}

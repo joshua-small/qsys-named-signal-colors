@@ -1,0 +1,21 @@
+name: Signal color rules
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: qsys-named-signal-colors
+      - uses: actions/checkout@v7
+        with:
+          repository: joshua-small/qsys-mods-core
+          ref: 75251f310767cb6f05c420635acef1bd75aa2d6d
+          path: qsys-mods-core
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: qsys-named-signal-colors/global.json
+      - run: dotnet run --project qsys-named-signal-colors/tests/SignalColorRules.Tests.csproj
