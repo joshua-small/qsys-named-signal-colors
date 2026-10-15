@@ -14,4 +14,6 @@ Clone Core beside this repository, then build `Designer.Modules.NamedSignalColor
 
 `tests/Preferences/Preferences.csproj` checks the actual Windows color controls, saved palette round trips and draft isolation without opening Designer or changing user settings. Build with the same `DesignerDir` and run on Windows. These control checks do not establish in-Designer popup, keyboard or theme acceptance.
 
+Designer 10.5 acceptance for 0.1.1 used a separate hash-matched application copy: all 24 controls loaded, native popup changes reached the palette, exact RGB text committed and survived OK/reopen, Cancel preserved the settings file, and scrolling reached the final role. Light/dark preferences and popup renders were inspected. Popup binding, text commit, persistence and scrolling were exercised by an in-process test harness; this does not claim physical keyboard/mouse coverage or hardware validation. [Validation and release tracking](https://github.com/joshua-small/qsys-named-signal-colors/pull/5).
+
 Extracted from Schematic Tools commit `13c52e6`. [Split tracking](https://github.com/joshua-small/qsys-schematic-tools/issues/4).
