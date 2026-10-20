@@ -19,3 +19,6 @@ jobs:
         with:
           global-json-file: qsys-named-signal-colors/global.json
       - run: dotnet run --project qsys-named-signal-colors/tests/SignalColorRules.Tests.csproj
+      - name: Palette migration and inference regressions
+        working-directory: qsys-named-signal-colors
+        run: dotnet run --project tests/Palette/Palette.Tests.csproj
