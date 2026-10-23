@@ -22,6 +22,8 @@ Run `dotnet run --project tests/Palette/Palette.Tests.csproj` with .NET 10 to ch
 
 Run `dotnet run --project tests/Selection/Selection.Tests.csproj` to check the production selection reader with synthetic graphic/pin objects. It covers mixed and empty selections, ignored components and unnamed pins, duplicate references, relevant-object bounds and malformed Named Signal representations. It needs no Core or vendor assemblies. Native mixed-selection preview, Apply revalidation and undo still require Designer acceptance.
 
+Run `dotnet run --project tests/Preview/Preview.Tests.csproj` to exercise the production preview and Apply revalidation code against a synthetic host. Cases include 257–4096 groups, mixed selections, ignored selection changes, stale groups/pin evidence/colors and the remaining pin limits. The synthetic host does not establish native color propagation, undo or Designer acceptance.
+
 Designer 10.5 acceptance for 0.1.1 used a separate hash-matched application copy: all 24 controls loaded, native popup changes reached the palette, exact RGB text committed and survived OK/reopen, Cancel preserved the settings file, and scrolling reached the final role. Light/dark preferences and popup renders were inspected. Popup binding, text commit, persistence and scrolling were exercised by an in-process test harness; this does not claim physical keyboard/mouse coverage or hardware validation. [Validation and release tracking](https://github.com/joshua-small/qsys-named-signal-colors/pull/5).
 
 Extracted from Schematic Tools commit `13c52e6`. [Split tracking](https://github.com/joshua-small/qsys-schematic-tools/issues/4).

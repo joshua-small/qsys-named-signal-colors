@@ -25,3 +25,6 @@ jobs:
       - name: Named Signal selection regressions
         working-directory: qsys-named-signal-colors
         run: dotnet run --project tests/Selection/Selection.Tests.csproj
+      - name: Large preview and revalidation regressions
+        working-directory: qsys-named-signal-colors
+        run: dotnet run --project tests/Preview/Preview.Tests.csproj
