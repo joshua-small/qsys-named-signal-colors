@@ -64,8 +64,6 @@ internal static class SignalColoring
         var all = HostSelection.HostType("QSC.QSys.Design.SignalNameManager")
             .GetProperty("AllInfos", PublicStatic)?.GetValue(null) as IDictionary
             ?? throw new MissingMemberException("SignalNameManager.AllInfos");
-        if (all.Count > 256)
-            throw new InvalidOperationException("This design exceeds the 256-group preview limit. Nothing changed; use selected groups instead.");
         var pins = new HashSet<object>(ReferenceEqualityComparer.Instance);
         foreach (DictionaryEntry entry in all)
         {
@@ -109,8 +107,8 @@ internal static class SignalColoring
                 throw new InvalidOperationException("A signal group exceeds 256 associated pins. This first color experiment does not support that group.");
             if (associated.Any(visited.Contains)) throw new InvalidOperationException("Named Signal groups overlap unexpectedly. Nothing changed.");
             visited.UnionWith(associated);
-            if (visited.Count > Limit || groups.Count == 256)
-                throw new InvalidOperationException("This preview exceeds 256 groups or 4096 associated pins. Select fewer names.");
+            if (visited.Count > Limit)
+                throw new InvalidOperationException("This preview exceeds 4096 associated pins. Select fewer names.");
             var states = associated.Select(ReadPin).ToArray();
             if (states.Any(p => !string.Equals(p.Evidence.Name, name, StringComparison.OrdinalIgnoreCase)))
                 throw new InvalidOperationException("The native group contains unexpected names. Nothing changed.");
@@ -141,12 +139,14 @@ internal static class SignalColoring
     {
         if (!ReferenceEquals(a.Manager, b.Manager) || a.Scope != b.Scope || a.DefaultColorsOnly != b.DefaultColorsOnly
             || !SameSet(a.Selection, b.Selection) || a.Groups.Length != b.Groups.Length) return false;
+        var freshGroups = b.Groups.ToDictionary(g => g.Name, StringComparer.Ordinal);
         foreach (var old in a.Groups)
         {
-            var fresh = b.Groups.FirstOrDefault(g => g.Name == old.Name);
-            if (fresh is null || fresh.Choice != old.Choice || !SameSet(old.Pins.Select(p => p.Pin), fresh.Pins.Select(p => p.Pin))) return false;
+            if (!freshGroups.TryGetValue(old.Name, out var fresh) || fresh.Choice != old.Choice
+                || old.Pins.Length != fresh.Pins.Length) return false;
+            var freshPins = fresh.Pins.ToDictionary(p => p.Pin, ReferenceEqualityComparer.Instance);
             foreach (var p in old.Pins)
-                if (fresh.Pins.Single(n => ReferenceEquals(n.Pin, p.Pin)) != p) return false;
+                if (!freshPins.TryGetValue(p.Pin, out var current) || current != p) return false;
         }
         return true;
     }

@@ -4,6 +4,8 @@ Preview and apply role-based colors to selected Named Signals or the entire desi
 
 **Preview selection** uses selected Named Signal tags and named pins. Components, annotations, shapes and unnamed pins are ignored, even in a mixed selection. Selecting a component does not include its pins. Changing only ignored objects does not invalidate a preview; selected Named Signals and their associated groups are still rechecked before Apply. If no Named Signals are selected, the preview is empty and Apply stays disabled.
 
+Selection and entire-design previews can include more than 256 groups. The remaining bounds are 256 associated pins per group and 4096 associated pins per operation; selection also allows up to 4096 relevant tag/pin graphics. Apply rechecks the preview before making one undoable operation.
+
 **File > Preferences > Named Signal Colors** contains the palette and **Only change default colors**, default **off**. Enabling the filter preserves groups that contain non-default colors. Role and selection/design scope remain in the operation window. Saving Preferences refreshes an existing preview without applying it.
 
 Each role uses the same color picker as Designer 10.5's signal-trace preferences, with a color swatch, popup picker and exact color entry. Transparency is disabled. Scroll to reach every role. Existing palettes keep their opaque `#RRGGBB` format; edits are saved with **OK** and discarded with **Cancel**.
