@@ -22,3 +22,6 @@ jobs:
       - name: Palette migration and inference regressions
         working-directory: qsys-named-signal-colors
         run: dotnet run --project tests/Palette/Palette.Tests.csproj
+      - name: Named Signal selection regressions
+        working-directory: qsys-named-signal-colors
+        run: dotnet run --project tests/Selection/Selection.Tests.csproj

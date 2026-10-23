@@ -32,12 +32,7 @@ internal static class SignalColoring
     private static object? Property(object o, string name) => o.GetType().GetProperty(name, PublicInstance)?.GetValue(o);
     private static object Field(object o, string name) => o.GetType().GetField(name, PublicInstance)?.GetValue(o)
         ?? throw new MissingFieldException(o.GetType().FullName, name);
-    private static string Label(object pin)
-    {
-        var property = pin.GetType().GetProperty("Label", PublicInstance)
-            ?? throw new MissingMemberException(pin.GetType().FullName, "Label");
-        return property.GetValue(pin) as string ?? "";
-    }
+    private static string Label(object pin) => SignalSelection.Label(pin);
     private static object Manager => HostSelection.HostType("QSC.QSys.App").GetField("Manager", PublicStatic)?.GetValue(null)
         ?? throw new MissingFieldException("QSC.QSys.App", "Manager");
     internal static string Hex(Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
@@ -91,21 +86,12 @@ internal static class SignalColoring
         Application.Current.Dispatcher.VerifyAccess();
         if (!Host.Enabled) throw new InvalidOperationException("Schematic Tools is not enabled for this host.");
         var manager = Manager;
-        var raw = scope == SignalColorScope.Selection ? Bounded((IEnumerable)HostSelection.GlobalSelection) : Array.Empty<object>();
-        var graphicPin = HostSelection.HostType("QSC.QSys.Graphic.Pin");
-        var pinLabel = HostSelection.HostType("QSC.QSys.Graphic.Pins.PinLabel");
-        var graphicComponent = HostSelection.HostType("QSC.QSys.Graphic.Component");
-        var selected = scope == SignalColorScope.EntireDesign ? EntireDesignPins() : new HashSet<object>(ReferenceEqualityComparer.Instance);
-        foreach (var g in raw)
-        {
-            if (graphicPin.IsInstanceOfType(g)) selected.Add(Required(g, "InnerPin"));
-            else if (pinLabel.IsInstanceOfType(g)) selected.Add(Required(Required(g, "Pin"), "InnerPin"));
-            else if (graphicComponent.IsInstanceOfType(g))
-                foreach (var p in Bounded((IEnumerable)Required(Required(g, "obj"), "Pins"))) selected.Add(p);
-            else throw new InvalidOperationException("Select Named Signal tags, pins, or schematic components. Deselect other objects before previewing colors.");
-        }
+        var selection = scope == SignalColorScope.Selection
+            ? SignalSelection.Read((IEnumerable)HostSelection.GlobalSelection,
+                HostSelection.HostType("QSC.QSys.Graphic.Pin"), HostSelection.HostType("QSC.QSys.Graphic.Pins.PinLabel"), Limit)
+            : null;
+        var selected = selection?.Pins ?? EntireDesignPins();
         CheckBound(selected.ToArray());
-        selected.RemoveWhere(p => string.IsNullOrWhiteSpace(Label(p)));
         var getInfo = HostSelection.HostType("QSC.QSys.Design.SignalNameManager")
             .GetMethod("GetInfo", PublicStatic, null, new[] { typeof(string) }, null)
             ?? throw new MissingMethodException("SignalNameManager.GetInfo(string)");
@@ -133,7 +119,7 @@ internal static class SignalColoring
                 : SignalColorRules.Choose(states.Select(p => p.Evidence).ToArray(), palette, forced, defaultColorsOnly);
             groups.Add(new Group(name, states, choice, states.Count(p => !selected.Contains(p.Pin))));
         }
-        return new Preview(manager, scope, raw, groups.OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase).ToArray(),
+        return new Preview(manager, scope, selection?.Graphics ?? Array.Empty<object>(), groups.OrderBy(g => g.Name, StringComparer.OrdinalIgnoreCase).ToArray(),
             palette.ToDictionary(p => p.Key, p => SignalColorRules.Normalize(p.Value)), forced, defaultColorsOnly);
     }
 
