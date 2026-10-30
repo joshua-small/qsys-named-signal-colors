@@ -30,7 +30,7 @@ internal sealed class SignalColorWindow : Window
         SetResourceReference(StyleProperty, typeof(Window));
         WindowStartupLocation = WindowStartupLocation.CenterOwner;
         var panel = new DockPanel { Margin = new Thickness(12) };
-        var hint = new TextBlock { Text = "Preview selected signal tags, pins, or components, or use Color all named signals to preview the entire design. Review the proposed colors, then Apply preview. Matching tags across pages change together.", TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 10) };
+        var hint = new TextBlock { Text = "Preview selected Named Signal tags or named pins; other selected objects are ignored. Use Color all named signals to preview the entire design. Review the proposed colors, then Apply preview. Matching tags across pages change together.", TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 10) };
         DockPanel.SetDock(hint, Dock.Top); panel.Children.Add(hint);
         var toolbar = new WrapPanel { Margin = new Thickness(0, 0, 0, 10) };
         toolbar.Children.Add(new TextBlock { Text = "Role:", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 8, 0) });
@@ -96,7 +96,7 @@ internal sealed class SignalColorWindow : Window
             var scopeName = scope == SignalColorScope.EntireDesign ? "Entire design" : "Selected groups";
             status.Text = plan.Groups.Length == 0
                 ? scope == SignalColorScope.EntireDesign ? "No Named Signals found in this design. Nothing changed."
-                    : "No named pins found. Select a signal tag or a component with Named Signals."
+                    : "No Named Signals selected. Select a Named Signal tag or named pin; other objects are ignored."
                 : $"{scopeName}: {plan.Groups.Length} signal group(s); {changes} would change. Review the reasons and pin counts, then Apply preview. No colors changed yet.";
         }
         catch (Exception error) { Error(error); }

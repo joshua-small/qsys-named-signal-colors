@@ -12,10 +12,19 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: joshua-small/qsys-mods-core
-          ref: 75251f310767cb6f05c420635acef1bd75aa2d6d
+          ref: 85d7ef33bc91240a738213dd7ad096d82914f50d
           path: qsys-mods-core
           persist-credentials: false
       - uses: actions/setup-dotnet@v6
         with:
           global-json-file: qsys-named-signal-colors/global.json
       - run: dotnet run --project qsys-named-signal-colors/tests/SignalColorRules.Tests.csproj
+      - name: Palette migration and inference regressions
+        working-directory: qsys-named-signal-colors
+        run: dotnet run --project tests/Palette/Palette.Tests.csproj
+      - name: Named Signal selection regressions
+        working-directory: qsys-named-signal-colors
+        run: dotnet run --project tests/Selection/Selection.Tests.csproj
+      - name: Large preview and revalidation regressions
+        working-directory: qsys-named-signal-colors
+        run: dotnet run --project tests/Preview/Preview.Tests.csproj
